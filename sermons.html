@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sermons — FBC Haw River</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #008080;
+      --teal-dark: #006666;
+      --navy: #003399;
+      --green: #008000;
+      --cream: #f3ecde;
+      --cream-dark: #e8deca;
+      --text: #1a1a1a;
+      --text-muted: #555;
+      --border: #ddd;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── HUB VIEW ─────────────────────────────── */
+    #hub-view { max-width: 860px; margin: 0 auto; padding: 0 20px 60px; }
+
+    .hub-header {
+      background: var(--teal);
+      color: white;
+      text-align: center;
+      padding: 48px 24px 40px;
+      margin: 0 -20px 40px;
+    }
+    .hub-header h1 {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .hub-header p {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      letter-spacing: 0.02em;
+    }
+
+    /* Book filter tabs */
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 36px;
+    }
+    .filter-btn {
+      background: white;
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover { border-color: var(--teal); color: var(--teal); }
+    .filter-btn.active {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: white;
+    }
+
+    /* Book section headings */
+    .book-section { margin-bottom: 44px; }
+    .book-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .book-name {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--teal);
+    }
+    .book-line {
+      flex: 1;
+      height: 1px;
+      background: var(--teal);
+      opacity: 0.3;
+    }
+
+    /* Sermon cards */
+    .sermon-card {
+      background: white;
+      border-left: 4px solid var(--teal);
+      border-radius: 0 6px 6px 0;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: box-shadow 0.15s, transform 0.12s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .sermon-card:hover {
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+      transform: translateX(2px);
+    }
+    .sermon-card-left { flex: 1; min-width: 0; }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .card-series {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--teal);
+    }
+    .card-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .card-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
+    .card-title {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      line-height: 1.35;
+    }
+    .card-scripture {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .card-arrow {
+      color: var(--teal);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+
+    /* ── DETAIL VIEW ──────────────────────────── */
+    #detail-view { display: none; max-width: 860px; margin: 0 auto; padding: 0 0 60px; }
+
+    .detail-back-bar {
+      background: var(--teal);
+      padding: 0 24px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.85);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 14px 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .back-btn:hover { color: white; }
+
+    .detail-hero {
+      background: var(--teal);
+      color: white;
+      padding: 6px 28px 36px;
+    }
+    .detail-series {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 10px;
+    }
+    .detail-title {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .detail-ref {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.75);
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+    .detail-preacher {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.6);
+      font-style: normal;
+      letter-spacing: 0.04em;
+    }
+
+    /* Video embed */
+    .video-container {
+      background: black;
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    /* Sermon body */
+    .sermon-body { padding: 36px 28px; background: var(--cream); }
+
+    /* Main point callout */
+    .main-point-box {
+      background: white;
+      border-left: 4px solid var(--teal);
+      padding: 18px 22px;
+      margin-bottom: 36px;
+      border-radius: 0 6px 6px 0;
+    }
+    .main-point-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 6px;
+    }
+    .main-point-text {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    /* Outline section */
+    .section-heading {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid var(--teal);
+      opacity: 0.85;
+    }
+
+    .outline-list { list-style: none; margin-bottom: 40px; }
+    .outline-item { margin-bottom: 28px; }
+    .outline-point-num {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .outline-point-title {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+    .outline-point-body {
+      font-size: 0.91rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* Notes link (for sheet-only sermons without inline outline) */
+    .notes-link-box {
+      background: white;
+      border-radius: 6px;
+      padding: 22px 26px;
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .notes-link-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .notes-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--teal);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .notes-link-btn:hover { background: var(--teal-dark); }
+
+    /* Loading state */
+    .loading-bar {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Takeaways */
+    .takeaways-box {
+      background: white;
+      border-radius: 6px;
+      padding: 24px 26px;
+      margin-bottom: 36px;
+    }
+    .takeaway-list { list-style: none; }
+    .takeaway-list li {
+      display: flex;
+      gap: 12px;
+      font-size: 0.91rem;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--cream-dark);
+    }
+    .takeaway-list li:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .takeaway-bullet {
+      width: 20px;
+      height: 20px;
+      background: var(--teal);
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+    .takeaway-bullet svg { width: 10px; height: 10px; fill: white; }
+
+    /* Bottom back button */
+    .bottom-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: 1.5px solid var(--teal);
+      color: var(--teal);
+      padding: 10px 22px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-transform: uppercase;
+    }
+    .bottom-back:hover { background: var(--teal); color: white; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hub-header h1 { font-size: 1.8rem; }
+      .detail-title { font-size: 1.5rem; }
+      .sermon-body { padding: 24px 18px; }
+      .detail-hero { padding: 6px 18px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HUB VIEW
+═══════════════════════════════════════════ -->
+<div id="hub-view">
+  <div class="hub-header">
+    <h1>Sermons</h1>
+    <p>FBC Haw River &nbsp;·&nbsp; Good News for Haw River</p>
+  </div>
+
+  <div class="filter-row" id="filter-row"></div>
+  <div id="sermon-list"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     DETAIL VIEW
+═══════════════════════════════════════════ -->
+<div id="detail-view">
+  <div class="detail-back-bar">
+    <button class="back-btn" onclick="showHub()">
+      <span>&#8592;</span> All Sermons
+    </button>
+  </div>
+  <div class="detail-hero">
+    <div class="detail-series" id="d-series"></div>
+    <div class="detail-title" id="d-title"></div>
+    <div class="detail-ref" id="d-ref"></div>
+    <div class="detail-preacher" id="d-preacher"></div>
+  </div>
+  <div class="video-container">
+    <iframe id="d-video" src="" title="Sermon video" allowfullscreen></iframe>
+  </div>
+  <div class="sermon-body">
+    <div class="main-point-box">
+      <div class="main-point-label">Main Point</div>
+      <div class="main-point-text" id="d-main-point"></div>
+    </div>
+
+    <div id="d-outline-section">
+      <div class="section-heading">Outline</div>
+      <ul class="outline-list" id="d-outline"></ul>
+    </div>
+
+    <div id="d-notes-link-section" style="display:none;">
+      <div class="notes-link-box">
+        <span class="notes-link-label">Full sermon notes are available in the link below.</span>
+        <a id="d-notes-link" href="#" target="_blank" rel="noopener" class="notes-link-btn">
+          Read Sermon Notes &#8599;
+        </a>
+      </div>
+    </div>
+
+    <div id="d-takeaways-section">
+      <div class="takeaways-box">
+        <div class="section-heading">Key Takeaways</div>
+        <ul class="takeaway-list" id="d-takeaways"></ul>
+      </div>
+    </div>
+
+    <button class="bottom-back" onclick="showHub()">&#8592; Back to All Sermons</button>
+  </div>
+</div>
+
+<script>
+  // ─────────────────────────────────────────────
+  // APPS SCRIPT ENDPOINT
+  // Same URL used for the Life Track forms.
+  // New sermons are read from the "Sermons" tab
+  // in the Google Sheet automatically on page load.
+  // ─────────────────────────────────────────────
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1L-SvcjmFCHBsCiDWfb-wBOHzdPcN7blIKeDNekdaO-zNgK4Dl0RqIJ5rkl9dokyxiA/exec";
+
+  // ─────────────────────────────────────────────
+  // FALLBACK DATA (existing 5 sermons with full
+  // SEO outlines). Sheet data takes priority.
+  // ─────────────────────────────────────────────
+  const FALLBACK_SERMONS = [
+    {
+      youtubeId: "wb1cGwFaVjI",
+      title: "What Is Your God?",
+      scripture: "Exodus 20:4-6",
+      book: "Exodus",
+      series: "Ten Words",
+      date: "April 27, 2026",
+      preacher: "Justin Stevers",
+      simpleTruth: "God doesn't just care that He's worshipped. He cares how He's worshipped.",
+      outline: [
+        {
+          label: "I.",
+          title: "False Worship: Reshaping God in Our Image",
+          body: "Most people think idolatry means bowing to a wooden statue. The second commandment is after something closer to home: taking the true God and slowly reshaping him into someone more comfortable. More available on our schedule. More likely to agree with us. We make God manageable when we only go to church services that produce strong feelings, treating emotional experience as proof that God showed up. We make God useful when we treat the Bible like a lucky charm or prayer like a vending machine. We make God controllable when we perform religious rituals without ever actually surrendering our hearts. All of it is idolatry. God will not be reshaped. He will not be managed. He is who he says he is, and true worship starts by accepting that."
+        },
+        {
+          label: "II.",
+          title: "True Worship: Reflecting God as His Image",
+          body: "Here is what sets the Bible apart from every other religion: God does not need us to make an image of him. He already made one. Genesis 1:26-27 says we are created in the image of God. Every human being is a living, breathing representation of the Creator. When we manufacture our own version of God, we are not just breaking a rule. We are degrading ourselves. We were made to reflect God's character into the world: his justice, his love, his patience, his truth. That is what worship looks like from Monday through Saturday. It is not mainly a feeling in a Sunday service. It is a life that points people toward the real God."
+        }
+      ],
+      takeaways: [
+        "Idolatry is not a relic of the ancient world. Any time we reshape God into someone more convenient or more agreeable, we are guilty of the second commandment.",
+        "Chasing emotional experiences in worship can quietly become its own kind of idolatry. If we only feel close to God when the music hits just right, we may be worshipping the feeling more than the Father.",
+        "We are not called to make images of God. We are made to be his image. The way we treat people, work, forgive, and love is an act of worship or an act of idolatry."
+      ]
+    },
+    {
+      youtubeId: "ZJaemk1S4AY",
+      title: "Who Is Your God?",
+      scripture: "Exodus 20:1-3",
+      book: "Exodus",
+      series: "Ten Words",
+      date: "April 20, 2026",
+      preacher: "Justin Stevers",
+      simpleTruth: "Let God be God.",
+      outline: [
+        {
+          label: "I.",
+          title: "Know Your Commander (vv. 1-2a)",
+          body: "The Ten Commandments are not a list of rules from a distant authority. They are words from a God who is fully known. Before Exodus 20 gives a single command, it tells us who is speaking. He is YHWH, the LORD, the God whose name Moses heard at the burning bush: \"I am who I am.\" He does not borrow his existence from anything else. He has always been and always will be. He is Trinity, meaning the Father, Son, and Holy Spirit have loved each other perfectly from eternity. God did not create us because he was lonely. He created us to invite us into a love that was already full and overflowing. Knowing who God is changes everything about why we would want to obey him."
+        },
+        {
+          label: "II.",
+          title: "Know Your Motivation (v. 2b)",
+          body: "Many people think the Bible works like this: obey God's rules, and he will accept you. Exodus 20 flips that completely. God says, \"I am the LORD your God, who brought you out of Egypt, out of the house of slavery\" before he gives a single command. Rescue comes first. Grace comes before law. He is not saying, \"Do these things to earn my love.\" He is saying, \"You are already mine. Here is how my people live.\" For us today, this means that following Jesus is not a way to earn God's approval. It is a response to a rescue that has already happened. Jesus obeyed every commandment perfectly in our place, died for our failures, and rose again. He didn't point us toward the mountain. He carried us up it."
+        },
+        {
+          label: "III.",
+          title: "Know Your Allegiance (v. 3)",
+          body: "\"You shall have no other gods before me.\" The first commandment does not just mean believing that one God exists. It means giving that God your whole heart. The word \"before me\" in Hebrew means in front of me, in my presence, competing with me for your attention. We are surrounded by things that want that spot. Career, comfort, approval, control. None of them are bad on their own, but any of them can quietly slide into the place that belongs to God alone. The god you actually worship, the thing you turn to when life gets hard, the thing you most fear losing, shapes everything about who you become."
+        }
+      ],
+      takeaways: [
+        "The God of the Ten Commandments is not a distant lawgiver handing down rules from a distance. He is the God who rescued his people before he required anything of them. Grace always comes first.",
+        "Jesus perfectly obeyed every commandment in our place, died for every time we have not, and rose again. He did not show us a better way to climb the mountain. He climbed it for us.",
+        "You may have grown up following the rules without ever meeting the God behind them. The Ten Commandments are not the destination. They are a signpost pointing toward a real relationship with the living God."
+      ]
+    },
+    {
+      youtubeId: "w7m64C-skNA",
+      title: "Gospel Going",
+      scripture: "Acts 13:1-3",
+      book: "Acts",
+      series: "Looking Back to Look Forward",
+      date: "April 13, 2026",
+      preacher: "Justin Stevers",
+      simpleTruth: "Healthy churches go. Across the street, across town, across the world.",
+      outline: [
+        {
+          label: "I.",
+          title: "Healthy Churches Unite (v. 1)",
+          body: "Look at who is in the room at Antioch in Acts 13:1. Barnabas, a wealthy Jewish man from Cyprus. Simeon called Niger, a Black African. Lucius of Cyrene, also from North Africa. Manaen, who grew up alongside Herod the tetrarch, the man who executed John the Baptist. And Saul, a former religious terrorist who spent years hunting down Christians. There is no natural reason these five men should be in the same room, let alone leading the same church. What united them was not background, culture, or personality. It was the gospel, the news that Jesus died for sinners and rose from the dead. A church built around the gospel will draw people who have nothing else in common and hold them together anyway. That is one of the most powerful things a local church can put on display."
+        },
+        {
+          label: "II.",
+          title: "Healthy Churches Worship (v. 2a)",
+          body: "The text says the leaders at Antioch were worshiping the Lord and fasting when the Holy Spirit spoke. This is worth pausing on. The greatest missionary movement in human history did not start in a strategy session. It started in a prayer meeting. Churches that send people into the world are first churches that are on their knees before God. You cannot manufacture mission from enthusiasm or programs. It grows out of people who are genuinely captivated by God, who fast and pray not because it is on the calendar but because they are truly dependent on him."
+        },
+        {
+          label: "III.",
+          title: "Healthy Churches Listen (vv. 2b-3)",
+          body: "The Holy Spirit said, \"Set apart for me Barnabas and Saul for the work to which I have called them.\" Notice that this is a word to the whole church, not just to two individuals. The church responded together: they fasted more, prayed, laid their hands on Barnabas and Saul, and sent them off. Sending missionaries is not a solo decision. It is a community decision. The church confirms the call, commits to prayer, and takes on real sacrifice to make it happen. Every church that takes the Great Commission seriously is still doing what Antioch did in Acts 13."
+        }
+      ],
+      takeaways: [
+        "The American church tends to measure health by attendance numbers. Acts 13 suggests a better measure: how many people is this church sending? Growth and going are both good. But going is the goal.",
+        "The diversity at Antioch was not a program or an initiative. It was the natural result of people being united around the gospel rather than around preferences or culture.",
+        "Every significant movement of God in the book of Acts was preceded by prayer. If we want to see God move in Haw River, the place to start is not a new plan. It is a prayer meeting."
+      ]
+    },
+    {
+      youtubeId: "wZZXwsypd0U",
+      title: "The Voice of a god vs. The Word of God",
+      scripture: "Acts 12:1-25",
+      book: "Acts",
+      series: "Looking Back to Look Forward",
+      date: "April 6, 2026",
+      preacher: "Justin Stevers",
+      simpleTruth: "God answers prayer and pride.",
+      outline: [
+        {
+          label: "I.",
+          title: "Are You Desperate for God to Work? (vv. 1-11)",
+          body: "Herod Agrippa I comes from a violent family. His grandfather slaughtered babies in Bethlehem trying to kill Jesus. His uncle beheaded John the Baptist. Now Herod has executed James and has Peter on death row. The early church has no political power, no army, and no leverage. What they have is prayer. And Acts 12 shows us that prayer is enough. Peter is asleep in his cell the night before his expected execution. Not because he is indifferent, but because he is resting in the sovereignty of God. Meanwhile the church is praying hard. They are not tossing up casual requests. They are desperate. That is the kind of prayer God loves to answer. If we want to see God move in our families, our neighborhoods, our town, desperation is the starting point. Not a five-step plan. Not a bigger budget. Desperate, believing prayer."
+        },
+        {
+          label: "II.",
+          title: "Are You Expecting God to Work? (vv. 12-17)",
+          body: "God answers the church's prayer in a dramatic way. An angel appears in Peter's cell, the chains fall off, doors open on their own, and Peter walks out a free man. He goes straight to the house where the church is gathered and knocks on the door. A servant named Rhoda hears his voice, gets so excited she forgets to open the door, and runs to tell the others. Their response: \"You are out of your mind.\" These are the same people who had been praying for exactly this. It is a funny moment, but it is also a mirror. We pray and then we are shocked when God shows up. Our faith should match the size of our God. Notice also what Peter's deliverance looks like: asleep in the dark, bound in chains, facing certain death, until a light appears and the chains fall off. That is a picture of every person who comes to Christ."
+        },
+        {
+          label: "III.",
+          title: "Who Are You Trying to Impress? (vv. 18-25)",
+          body: "The chapter ends with a sharp contrast. Herod puts on royal robes and delivers a speech. The crowd shouts, \"The voice of a god, not of a man!\" Herod soaks it in and does not give God the glory. An angel strikes him down and he dies. Then Luke gives us one of the most quietly powerful lines in Acts: \"But the word of God increased and multiplied.\" Herod's voice, the loudest in the room, goes silent. The Word of God, which he tried to silence through persecution, keeps spreading. This is the pattern throughout Acts and throughout history. Every empire and ideology that has tried to bury the gospel has ended up in the ground itself. The Word of God keeps moving."
+        }
+      ],
+      takeaways: [
+        "The church in Acts 12 had no political influence, no army, and no leverage. What they had was prayer. Acts 12 is an argument that prayer is not the last resort. It is the first and best weapon.",
+        "The church prayed for Peter's release and then refused to believe it had happened. We do this too. Our faith should grow to match what we actually believe about God.",
+        "Herod's voice claimed to be divine and then went silent. The Word of God, which he tried to stop, kept multiplying. Every power that has tried to silence the gospel has eventually failed. That is not wishful thinking. It is history."
+      ]
+    },
+    {
+      youtubeId: "hAD6-oI2e1g",
+      title: "Weep No More",
+      scripture: "Revelation 5:1-14",
+      book: "Revelation",
+      series: "Easter 2026",
+      date: "April 5, 2026",
+      preacher: "Justin Stevers",
+      simpleTruth: "Jesus is worthy. And that changes everything.",
+      outline: [
+        {
+          label: "I.",
+          title: "Do You Feel the Despair? (vv. 1-4)",
+          body: "John, in a vision, stands in the throne room of heaven and watches an angel ask a question: who is worthy to open the scroll sealed with seven seals? This scroll contains God's entire plan for history: justice for the oppressed, judgment for the wicked, the renewal of all things. The angel looks through all of heaven, all of earth, all the places under the earth. No one is found worthy to open it. John weeps bitterly. And if you feel the weight of that moment, you should. Without someone worthy to open that scroll, the martyrs who died for their faith are never vindicated. The prayers of suffering people are never answered. Evil is never finally defeated. Jesus never returns. If no one opens that scroll, the universe is just a place where the powerful take what they want and die, and nothing means anything. That is not dramatic. That is just what hopelessness actually feels like."
+        },
+        {
+          label: "II.",
+          title: "Do You See the Deliverer? (vv. 5-7)",
+          body: "One of the elders tells John to stop weeping. \"The Lion of the tribe of Judah, the Root of David, has conquered.\" John turns to see the Lion and sees a Lamb, standing as though it had been slaughtered, with the marks of death still on him. This is one of the most important images in the entire Bible. The conquering did not happen through force. It happened through sacrifice. Jesus did not defeat sin and death by overpowering them from the outside. He stepped into the worst of it, took the full weight of human failure on himself, died, and rose. That is how he conquered. And that conquest is why he alone is worthy to hold history in his hands. The resurrection of Jesus is not an add-on to Christianity. Take it away and there is nothing left. It is the hinge of everything."
+        },
+        {
+          label: "III.",
+          title: "Do You Join the Doxology? (vv. 8-14)",
+          body: "When the Lamb takes the scroll, something breaks open in the throne room of heaven. The four living creatures and twenty-four elders fall down before the Lamb. Then thousands upon thousands of angels join in. Then every creature in heaven and on earth and under the earth and in the sea adds their voice: \"Worthy is the Lamb who was slain, to receive power and wealth and wisdom and might and honor and glory and blessing!\" That is the destiny of creation: a universe full of creatures who have finally seen Jesus clearly enough to have no other response than worship. The question Revelation 5 asks us is simple. You have heard who he is and what he did. Is your life oriented around him? Does the resurrection actually change anything for you day to day?"
+        }
+      ],
+      takeaways: [
+        "The apostle Paul said that if Jesus did not rise from the dead, our faith is worthless and we are still in our sins (1 Corinthians 15). Easter is not a tradition layered onto Christianity. It is the center of it.",
+        "The Lion of Judah conquered as a Lamb. The greatest power in the universe chose sacrifice over force. That is not weakness. It is a completely different definition of strength.",
+        "We do not need a bigger church, a better worship band, or a more effective program. We need a bigger view of Jesus. When we truly see him, everything else falls into its right place."
+      ]
+    }
+  ];
+
+  // ─────────────────────────────────────────────
+  // BOOK ORDER (canonical)
+  // ─────────────────────────────────────────────
+  const BOOK_ORDER_LIST = [
+    "Genesis","Exodus","Leviticus","Numbers","Deuteronomy",
+    "Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings",
+    "1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther",
+    "Job","Psalms","Proverbs","Ecclesiastes","Song of Solomon",
+    "Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel",
+    "Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum",
+    "Habakkuk","Zephaniah","Haggai","Zechariah","Malachi",
+    "Matthew","Mark","Luke","John","Acts",
+    "Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians",
+    "Philippians","Colossians","1 Thessalonians","2 Thessalonians",
+    "1 Timothy","2 Timothy","Titus","Philemon",
+    "Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude",
+    "Revelation"
+  ];
+
+  // ─────────────────────────────────────────────
+  // STATE
+  // ─────────────────────────────────────────────
+  let ALL_SERMONS = [...FALLBACK_SERMONS]; // will be updated after sheet fetch
+  let activeFilter = "All";
+
+  // ─────────────────────────────────────────────
+  // FETCH FROM GOOGLE SHEET
+  // ─────────────────────────────────────────────
+  async function loadSheetSermons() {
+    try {
+      const res = await fetch(SCRIPT_URL, { redirect: 'follow' });
+      const rows = await res.json();
+      if (!Array.isArray(rows) || rows.length === 0) return;
+
+      rows.forEach(row => {
+        const ytId = (row['YouTube ID'] || '').trim();
+        if (!ytId) return;
+
+        // Check if we already have this sermon in fallback data
+        const existing = ALL_SERMONS.find(s => s.youtubeId === ytId);
+        if (existing) {
+          // Update the preacher from sheet in case it changed
+          if (row['Preacher']) existing.preacher = row['Preacher'];
+          return;
+        }
+
+        // New sermon from sheet — add it
+        ALL_SERMONS.push({
+          youtubeId: ytId,
+          title: row['Title'] || '',
+          scripture: row['Scripture'] || '',
+          book: extractBook(row['Scripture'] || ''),
+          series: row['Series'] || '',
+          date: row['Date'] || '',
+          preacher: row['Preacher'] || 'Justin Stevers',
+          simpleTruth: row['Description'] || '',
+          docUrl: row['Doc URL'] || '',
+          outline: [],    // no inline outline for sheet-only sermons
+          takeaways: [],
+        });
+      });
+
+      // Sort by date descending (newest first within each book)
+      ALL_SERMONS.sort((a, b) => {
+        const da = new Date(a.date), db = new Date(b.date);
+        return db - da;
+      });
+
+      renderHub();
+    } catch (err) {
+      // Silent fail — fallback data still shows
+      console.log('Sheet fetch skipped:', err.message);
+    }
+  }
+
+  function extractBook(scripture) {
+    if (!scripture) return 'Other';
+    for (const book of BOOK_ORDER_LIST) {
+      if (scripture.startsWith(book)) return book;
+    }
+    // Fallback: everything before the first digit
+    return scripture.replace(/\s*\d.*$/, '').trim() || 'Other';
+  }
+
+  // ─────────────────────────────────────────────
+  // RENDER HUB
+  // ─────────────────────────────────────────────
+  function getBooks() {
+    const books = [...new Set(ALL_SERMONS.map(s => s.book))];
+    books.sort((a, b) => BOOK_ORDER_LIST.indexOf(a) - BOOK_ORDER_LIST.indexOf(b));
+    return books;
+  }
+
+  function renderHub() {
+    const filterRow = document.getElementById('filter-row');
+    const books = getBooks();
+    const filters = ["All", ...books];
+    filterRow.innerHTML = filters.map(f =>
+      `<button class="filter-btn ${f === activeFilter ? 'active' : ''}" onclick="setFilter('${f}')">${f}</button>`
+    ).join('');
+
+    const list = document.getElementById('sermon-list');
+    const visibleBooks = activeFilter === "All" ? books : [activeFilter];
+
+    list.innerHTML = visibleBooks.map(book => {
+      const bookSermons = ALL_SERMONS.filter(s => s.book === book);
+      if (bookSermons.length === 0) return '';
+      return `
+        <div class="book-section">
+          <div class="book-heading">
+            <div class="book-name">${book}</div>
+            <div class="book-line"></div>
+          </div>
+          ${bookSermons.map(s => `
+            <div class="sermon-card" onclick="showDetail('${s.youtubeId}')">
+              <div class="sermon-card-left">
+                <div class="card-meta">
+                  <span class="card-series">${s.series}</span>
+                  <span class="card-dot"></span>
+                  <span class="card-date">${s.date}</span>
+                </div>
+                <div class="card-title">${s.title}</div>
+                <div class="card-scripture">${s.scripture}${s.preacher ? ' &nbsp;·&nbsp; ' + s.preacher : ''}</div>
+              </div>
+              <div class="card-arrow">&#8250;</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }).join('');
+  }
+
+  function setFilter(book) {
+    activeFilter = book;
+    renderHub();
+  }
+
+  // ─────────────────────────────────────────────
+  // DETAIL VIEW
+  // ─────────────────────────────────────────────
+  function showDetail(youtubeId) {
+    const s = ALL_SERMONS.find(x => x.youtubeId === youtubeId);
+    if (!s) return;
+
+    document.getElementById('d-series').textContent = s.series;
+    document.getElementById('d-title').textContent = s.title;
+    document.getElementById('d-ref').textContent = s.scripture + '  ·  ' + s.date;
+    document.getElementById('d-preacher').textContent = s.preacher ? 'Preacher: ' + s.preacher : '';
+    document.getElementById('d-video').src = `https://www.youtube.com/embed/${s.youtubeId}`;
+    document.getElementById('d-main-point').textContent = s.simpleTruth;
+
+    const hasOutline = s.outline && s.outline.length > 0;
+    const hasTakeaways = s.takeaways && s.takeaways.length > 0;
+    const hasDocUrl = s.docUrl && s.docUrl.length > 0;
+
+    // Outline section
+    document.getElementById('d-outline-section').style.display = hasOutline ? 'block' : 'none';
+    if (hasOutline) {
+      document.getElementById('d-outline').innerHTML = s.outline.map(p => `
+        <li class="outline-item">
+          <div class="outline-point-num">${p.label}</div>
+          <div class="outline-point-title">${p.title}</div>
+          <div class="outline-point-body">${p.body}</div>
+        </li>
+      `).join('');
+    }
+
+    // Notes link (for sheet-only sermons)
+    const notesSection = document.getElementById('d-notes-link-section');
+    if (!hasOutline && hasDocUrl) {
+      document.getElementById('d-notes-link').href = s.docUrl;
+      notesSection.style.display = 'flex';
+    } else {
+      notesSection.style.display = 'none';
+    }
+
+    // Takeaways
+    document.getElementById('d-takeaways-section').style.display = hasTakeaways ? 'block' : 'none';
+    if (hasTakeaways) {
+      const checkIcon = `<svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      document.getElementById('d-takeaways').innerHTML = s.takeaways.map(t => `
+        <li>
+          <div class="takeaway-bullet">${checkIcon}</div>
+          <span>${t}</span>
+        </li>
+      `).join('');
+    }
+
+    document.getElementById('hub-view').style.display = 'none';
+    document.getElementById('detail-view').style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  function showHub() {
+    document.getElementById('detail-view').style.display = 'none';
+    document.getElementById('hub-view').style.display = 'block';
+    document.getElementById('d-video').src = '';
+    window.scrollTo(0, 0);
+  }
+
+  // ─────────────────────────────────────────────
+  // INIT: render immediately from fallback data,
+  // then silently update if the sheet has more.
+  // ─────────────────────────────────────────────
+  renderHub();
+  loadSheetSermons();
+</script>
+</body>
+</html>

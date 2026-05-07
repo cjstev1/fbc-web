@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Life 201 – Membership | FBC Haw River</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: sans-serif;
+      background: #f3ecde;
+      color: #000000;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid #b3d9d9;
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      max-width: 480px;
+      width: 100%;
+    }
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #008080;
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 26px;
+      font-weight: normal;
+      color: #000000;
+      margin-bottom: 0.5rem;
+    }
+    .course-name {
+      font-size: 13px;
+      color: #008080;
+      font-style: italic;
+      margin-bottom: 1.25rem;
+    }
+    p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #444444;
+      margin-bottom: 1.75rem;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin-bottom: 1.75rem;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #008080;
+      margin-bottom: 6px;
+    }
+    input, textarea {
+      display: block;
+      width: 100%;
+      padding: 9px 12px;
+      font-size: 14px;
+      font-family: sans-serif;
+      color: #000000;
+      background: #ffffff;
+      border: 1px solid #b3d9d9;
+      border-radius: 6px;
+      margin-bottom: 1.25rem;
+      outline: none;
+    }
+    input:focus, textarea:focus { border-color: #008080; }
+    textarea { min-height: 80px; resize: vertical; }
+    button {
+      background: #008080;
+      color: #ffffff;
+      font-family: sans-serif;
+      font-size: 13px;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 24px;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+    }
+    button:hover { background: #006666; }
+    .back {
+      display: inline-block;
+      margin-top: 1.25rem;
+      font-size: 12px;
+      color: #008080;
+      text-decoration: none;
+    }
+    .back:hover { color: #000000; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p class="eyebrow">Life 201 &mdash; Membership</p>
+    <h1>Join Us</h1>
+    <p class="course-name">Pizza with the Pastor</p>
+    <p>
+      An informal evening to hear the church's story, ask questions, and
+      consider membership over a meal. Leave your info below and we'll be in
+      touch with the next date.
+    </p>
+    <hr class="divider" />
+    <form id="form201">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" placeholder="Your full name" required />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required />
+
+      <label for="phone">Phone (optional)</label>
+      <input type="tel" id="phone" name="phone" placeholder="(919) 555-0100" />
+
+      <label for="note">Any questions for the pastor? (optional)</label>
+      <textarea id="note" name="note" placeholder="Anything on your mind..."></textarea>
+
+      <button type="submit">Reserve a spot</button>
+    </form>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1L-SvcjmFCHBsCiDWfb-wBOHzdPcN7blIKeDNekdaO-zNgK4Dl0RqIJ5rkl9dokyxiA/exec";
+    document.getElementById("form201").addEventListener("submit", function(e) {
+      e.preventDefault();
+      var data = {
+        form: "201",
+        name:  document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        note:  document.getElementById("note").value,
+      };
+      fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
+      document.querySelector(".card").innerHTML =
+        "<p class='eyebrow'>Life 201 &mdash; Membership</p>" +
+        "<h1 style='font-family:Georgia,serif;font-size:26px;font-weight:normal;color:#000000;margin:1rem 0 0.75rem'>You're on the list.</h1>" +
+        "<p>We'll be in touch soon with the next Pizza with the Pastor date.</p>";
+    });
+  </script>
+</body>
+</html>
