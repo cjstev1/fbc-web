@@ -4,225 +4,259 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sermons — FBC Haw River</title>
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --teal: #008080;
-      --teal-dark: #006666;
+      --teal-dark: #005c5c;
       --navy: #003399;
       --green: #008000;
       --cream: #f3ecde;
       --cream-dark: #e8deca;
       --text: #1a1a1a;
-      --text-muted: #555;
-      --border: #ddd;
+      --text-muted: #4a5568;
+      --border: #d2c8b4;
       --white: #ffffff;
     }
-
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--cream);
       color: var(--text);
       line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
-
+    /* ── ANIMATIONS ────────────────────────────── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes scaleInX {
+      from { transform: scaleX(0); opacity: 0; }
+      to { transform: scaleX(1); opacity: 1; }
+    }
     /* ── HUB VIEW ─────────────────────────────── */
-    #hub-view { max-width: 860px; margin: 0 auto; padding: 0 20px 60px; }
-
+    #hub-view { max-width: 800px; margin: 0 auto; padding: 60px 20px 80px; animation: fadeIn 0.4s ease forwards; }
     .hub-header {
-      background: var(--teal);
-      color: white;
       text-align: center;
-      padding: 48px 24px 40px;
-      margin: 0 -20px 40px;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     .hub-header h1 {
       font-family: 'Merriweather', Georgia, serif;
-      font-size: 2.4rem;
+      font-size: 3rem;
       font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+      color: var(--teal);
+      margin-bottom: 12px;
     }
     .hub-header p {
-      font-size: 0.95rem;
-      opacity: 0.85;
+      font-size: 1.05rem;
+      color: var(--text-muted);
       letter-spacing: 0.02em;
     }
-
     /* Book filter tabs */
     .filter-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 36px;
+      gap: 10px;
+      margin-bottom: 48px;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: 0.1s;
     }
     .filter-btn {
-      background: white;
-      border: 1.5px solid var(--border);
+      background: transparent;
+      border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 6px 18px;
-      border-radius: 20px;
+      padding: 8px 20px;
+      border-radius: 40px;
       font-family: 'Inter', sans-serif;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 500;
       cursor: pointer;
-      letter-spacing: 0.03em;
-      transition: all 0.15s;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .filter-btn:hover { border-color: var(--teal); color: var(--teal); }
+    .filter-btn:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 128, 128, 0.12);
+    }
+    .filter-btn:active { transform: translateY(0); }
     .filter-btn.active {
       background: var(--teal);
       border-color: var(--teal);
-      color: white;
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(0, 128, 128, 0.2);
     }
-
     /* Book section headings */
-    .book-section { margin-bottom: 44px; }
+    .book-section { margin-bottom: 56px; }
     .book-heading {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 16px;
+      margin-bottom: 24px;
     }
     .book-name {
-      font-family: 'Merriweather', Georgia, serif;
-      font-size: 0.78rem;
-      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--teal);
+      letter-spacing: 0.15em;
+      color: var(--navy);
     }
     .book-line {
       flex: 1;
       height: 1px;
-      background: var(--teal);
-      opacity: 0.3;
+      background: var(--border);
+      transform-origin: left;
+      animation: scaleInX 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-
     /* Sermon cards */
     .sermon-card {
-      background: white;
-      border-left: 4px solid var(--teal);
-      border-radius: 0 6px 6px 0;
-      padding: 20px 24px;
-      margin-bottom: 12px;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px 32px;
+      margin-bottom: 16px;
       cursor: pointer;
-      transition: box-shadow 0.15s, transform 0.12s;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 20px;
+      border: 1px solid transparent;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+      transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+      opacity: 0;
+      animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+    .book-section > .sermon-card:nth-child(2) { animation-delay: 0.05s; }
+    .book-section > .sermon-card:nth-child(3) { animation-delay: 0.10s; }
+    .book-section > .sermon-card:nth-child(4) { animation-delay: 0.15s; }
+    .book-section > .sermon-card:nth-child(5) { animation-delay: 0.20s; }
+    .book-section > .sermon-card:nth-child(6) { animation-delay: 0.25s; }
+    .book-section > .sermon-card:nth-child(n+7) { animation-delay: 0.30s; }
     .sermon-card:hover {
-      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-      transform: translateX(2px);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.08);
+      transform: translateY(-4px);
+      border-color: var(--border);
     }
     .sermon-card-left { flex: 1; min-width: 0; }
     .card-meta {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
     .card-series {
-      font-size: 0.7rem;
-      font-weight: 700;
+      font-size: 0.75rem;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--teal);
+      color: var(--navy);
     }
     .card-date {
-      font-size: 0.72rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
     }
-    .card-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border); }
+    .card-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border); }
     .card-title {
       font-family: 'Merriweather', Georgia, serif;
-      font-size: 1.18rem;
+      font-size: 1.35rem;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 4px;
-      line-height: 1.35;
+      margin-bottom: 6px;
+      line-height: 1.3;
+      transition: color 0.3s ease;
     }
+    .sermon-card:hover .card-title { color: var(--teal); }
     .card-scripture {
-      font-size: 0.82rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
-      font-style: italic;
     }
     .card-arrow {
-      color: var(--teal);
-      font-size: 1.3rem;
+      color: var(--border);
+      font-size: 1.8rem;
       flex-shrink: 0;
-      opacity: 0.6;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
     }
-
+    .sermon-card:hover .card-arrow {
+      color: var(--teal);
+      transform: translateX(6px) scale(1.1);
+    }
     /* ── DETAIL VIEW ──────────────────────────── */
-    #detail-view { display: none; max-width: 860px; margin: 0 auto; padding: 0 0 60px; }
-
-    .detail-back-bar {
-      background: var(--teal);
-      padding: 0 24px;
-    }
+    #detail-view { display: none; max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+    .detail-back-bar { margin-bottom: 40px; }
     .back-btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      color: rgba(255,255,255,0.85);
-      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
       font-weight: 500;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      padding: 14px 0;
       border: none;
       background: none;
       cursor: pointer;
-      transition: color 0.15s;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .back-btn:hover { color: white; }
-
+    .back-btn:hover { color: var(--teal); transform: translateX(-4px); }
     .detail-hero {
-      background: var(--teal);
-      color: white;
-      padding: 6px 28px 36px;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: 0.05s;
     }
     .detail-series {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.65);
-      margin-bottom: 10px;
+      color: var(--navy);
+      margin-bottom: 16px;
     }
     .detail-title {
       font-family: 'Merriweather', Georgia, serif;
-      font-size: 2rem;
+      font-size: 2.8rem;
       font-weight: 700;
-      line-height: 1.25;
-      margin-bottom: 12px;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      color: var(--text);
+      letter-spacing: -0.02em;
     }
     .detail-ref {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.75);
-      font-style: italic;
-      margin-bottom: 10px;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
     }
     .detail-preacher {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.6);
-      font-style: normal;
-      letter-spacing: 0.04em;
+      font-size: 1rem;
+      color: var(--text-muted);
     }
-
     /* Video embed */
     .video-container {
-      background: black;
+      background: var(--border);
       position: relative;
       padding-bottom: 56.25%;
       height: 0;
       overflow: hidden;
+      border-radius: 16px;
+      margin-bottom: 48px;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+      opacity: 0;
+      animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: 0.15s;
     }
     .video-container iframe {
       position: absolute;
@@ -230,85 +264,103 @@
       width: 100%; height: 100%;
       border: none;
     }
-
     /* Sermon body */
-    .sermon-body { padding: 36px 28px; background: var(--cream); }
-
+    .sermon-body {
+      padding: 0; background: transparent;
+      opacity: 0;
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: 0.25s;
+    }
     /* Main point callout */
     .main-point-box {
-      background: white;
-      border-left: 4px solid var(--teal);
-      padding: 18px 22px;
-      margin-bottom: 36px;
-      border-radius: 0 6px 6px 0;
+      background: var(--white);
+      padding: 32px 40px;
+      margin-bottom: 48px;
+      border-radius: 12px;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .main-point-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+    .main-point-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 4px;
+      background: var(--teal);
+      border-radius: 12px 0 0 12px;
     }
     .main-point-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--teal);
-      margin-bottom: 6px;
+      margin-bottom: 12px;
     }
     .main-point-text {
       font-family: 'Merriweather', Georgia, serif;
-      font-size: 1.05rem;
+      font-size: 1.3rem;
       font-style: italic;
       color: var(--text);
-      line-height: 1.55;
+      line-height: 1.5;
     }
-
     /* Outline section */
     .section-heading {
-      font-size: 0.7rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.25rem;
       font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-bottom: 20px;
-      padding-bottom: 8px;
-      border-bottom: 1.5px solid var(--teal);
-      opacity: 0.85;
+      color: var(--text);
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
     }
-
-    .outline-list { list-style: none; margin-bottom: 40px; }
-    .outline-item { margin-bottom: 28px; }
+    .outline-list { list-style: none; margin-bottom: 48px; }
+    .outline-item { position: relative; padding-left: 40px; margin-bottom: 40px; }
     .outline-point-num {
-      font-family: 'Merriweather', Georgia, serif;
-      font-size: 0.72rem;
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--teal);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
     }
     .outline-point-title {
       font-family: 'Merriweather', Georgia, serif;
-      font-size: 1.08rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 8px;
-      line-height: 1.35;
+      margin-bottom: 12px;
+      line-height: 1.4;
     }
     .outline-point-body {
-      font-size: 0.91rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
       line-height: 1.7;
     }
-
-    /* Notes link (for sheet-only sermons without inline outline) */
+    /* Notes link */
     .notes-link-box {
-      background: white;
-      border-radius: 6px;
-      padding: 22px 26px;
-      margin-bottom: 36px;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px 32px;
+      margin-bottom: 48px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .notes-link-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
     }
     .notes-link-label {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       color: var(--text-muted);
     }
     .notes-link-btn {
@@ -316,83 +368,88 @@
       align-items: center;
       gap: 8px;
       background: var(--teal);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 4px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
+      color: var(--white);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
       text-decoration: none;
       white-space: nowrap;
-      transition: background 0.15s;
+      transition: all 0.3s ease;
     }
-    .notes-link-btn:hover { background: var(--teal-dark); }
-
-    /* Loading state */
-    .loading-bar {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
+    .notes-link-btn:hover {
+      background: var(--teal-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 128, 128, 0.2);
     }
-
     /* Takeaways */
     .takeaways-box {
-      background: white;
-      border-radius: 6px;
-      padding: 24px 26px;
-      margin-bottom: 36px;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 32px 40px;
+      margin-bottom: 48px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
     .takeaway-list { list-style: none; }
     .takeaway-list li {
       display: flex;
-      gap: 12px;
-      font-size: 0.91rem;
+      gap: 16px;
+      font-size: 1.05rem;
       color: var(--text);
       line-height: 1.6;
-      margin-bottom: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--cream-dark);
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--cream);
+      transition: transform 0.3s ease;
     }
+    .takeaway-list li:hover { transform: translateX(4px); }
     .takeaway-list li:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
     .takeaway-bullet {
-      width: 20px;
-      height: 20px;
-      background: var(--teal);
+      width: 24px;
+      height: 24px;
+      background: var(--green);
       border-radius: 50%;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 2px;
+      margin-top: 4px;
     }
-    .takeaway-bullet svg { width: 10px; height: 10px; fill: white; }
-
+    .takeaway-bullet svg { width: 12px; height: 12px; stroke: white; fill: none; }
     /* Bottom back button */
     .bottom-back {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
-      background: none;
-      border: 1.5px solid var(--teal);
-      color: var(--teal);
-      padding: 10px 22px;
-      border-radius: 4px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 14px 32px;
+      border-radius: 40px;
+      font-size: 0.95rem;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.15s;
-      text-transform: uppercase;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
     }
-    .bottom-back:hover { background: var(--teal); color: white; }
-
+    .bottom-back:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 128, 128, 0.1);
+    }
+    .bottom-back:active { transform: translateY(0); }
     /* Responsive */
     @media (max-width: 600px) {
-      .hub-header h1 { font-size: 1.8rem; }
-      .detail-title { font-size: 1.5rem; }
-      .sermon-body { padding: 24px 18px; }
-      .detail-hero { padding: 6px 18px 28px; }
+      #hub-view, #detail-view { padding: 40px 16px 60px; }
+      .hub-header h1 { font-size: 2.2rem; }
+      .detail-title { font-size: 2rem; }
+      .sermon-card { padding: 20px 24px; flex-direction: column; align-items: flex-start; gap: 12px; }
+      .card-arrow { display: none; }
+      .main-point-box { padding: 24px; }
+      .takeaways-box { padding: 24px; }
+      .notes-link-box { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
